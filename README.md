@@ -1,2 +1,50 @@
 # A-Global-Mitogenomic-Atlas-Illuminates-Freshwater-Microeukaryote-Diversity
 This repository contains the scripts developped for the following scientific publication: "A Global Mitogenomic Atlas Illuminates Freshwater Microeukaryote Diversity". The following scripts are: lca10.pl and guessing_cd.py
+
+# lca10.pl
+To infer taxonomy, a lowest-common-ancestor (LCA) consensus approach was applied using lca10.pl. For each predicted protein within the MitoMAG, all taxonomy hits were collected and the most frequently occurring taxonomic tag at each rank was determined as follows. If a majority  (>50 %) of the protein’s hits agreed on a given taxonomic label at each rank, that label was assigned; otherwise the search moved one rank higher until a majority-rule consensus was reached. 
+
+# guessing_cd.py
+Inferring mitochondrial genetic codes with Codetta
+Mitochondrial genomes frequently harbour non-standard codon assignments; ignoring these leads to frame-shifts, premature stop codons and mis-annotated proteins. Codetta (Y.Shulgina, 2023) infers such codon reassignments automatically by: translating the nucleotide sequence in all six frames; aligning the resulting peptides to the Pfam-A profile-HMM collection with hmmscan; computing, for every sense and stop codon, the posterior probability that it encodes each amino-acid (or stop) given the alignment evidence.
+Because it does not rely on pre-existing annotations, Codetta is most useful whenever you have an unannotated or poorly annotated mitochondrial assembly and suspect non-canonical codon usage—for example in protists, basal metazoans, or any lineage where no curated translation table exists.
+
+Running Codetta
+Command
+codetta.py -m mitochondrial.genome.fasta
+Option
+-m	Restricts the search to Pfam domains that are common in mitochondria, giving faster runtimes and cleaner signal.
+-r <float>	(Optional) Relax or tighten the posterior-probability cutoff that marks a codon as “reassigned”. Lower values are more sensitive; higher values are more conservative (default = 0.9999).
+
+Codetta produces four files:
+mitochondrial.genome.fasta.fna.sequence_pieces.fna – processed nucleotide fragments
+mitochondrial.genome.fasta.preliminary_translation.faa – six-frame peptides + HMMER SSI index
+mitochondrial.genome.fasta.Pfam-A_enone.hmm.alignment_output.txt – raw hmmscan hits
+mitochondrial.genome.fasta.Pfam-A_enone.hmm.1e-10_0.9999_0.01_excl-mtvuy.genetic_code.out – final genetic-code inference (one-line summary at the end of the file). Only the genetic-code inference file is needed for downstream steps.
+
+Assigning each genome to an NCBI translation table
+We provide a small helper script that compares Codetta’s predictions against the current mitochondrial tables on NCBI and assigns the closest match:
+Command
+guessing_cd.py NCBI_genetic_codes_mito.fasta  example_of_predicted_code.fasta
+Inputs
+NCBI_genetic_codes_mito.fasta – reference translation tables (downloaded from NCBI)
+example_of_predicted_code.fasta – one Codetta prediction per genome (FASTA format)
+Output
+assigned_genetic_codes.csv – two-column CSV (Genome_ID,NCBI_Code)
+If Codetta’s output is inconclusive (all “?”), the script assigns the standard code 1 by default.
+
+Example result:
+Predicted_Genome,NCBI_Code
+13-NovE-contig-11612-segment0-pilon.fasta,Mold_Protozoan_Fungi_Mito_4
+
+Note: Codetta may struggle if a genome lacks recognisable Pfam domains (e.g. highly divergent proteins) or contains lineage-specific proteins. In such cases consider lowering the -r threshold and re-running, or curate the alignment manually.
+
+Gene prediction with the inferred code
+Once each genome has an assigned NCBI translation table, run Prodigal (or any gene caller that accepts NCBI codes) with the -g flag, e.g.:
+Command
+prodigal -i mitochondrial.genome.fasta -o genes.gbk -a proteins.faa -g <NCBI_Code>
+
+
+Software and resources
+Codetta – https://github.com/kshulgina/codetta
+NCBI mitochondrial genetic codes – https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi

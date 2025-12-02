@@ -1,5 +1,5 @@
 # A-Global-Mitogenomic-Atlas-Illuminates-Freshwater-Microeukaryote-Diversity
-This repository contains the scripts developped for the following scientific publication: "A Global Mitogenomic Atlas Illuminates Freshwater Microeukaryote Diversity". The following scripts are: lca10.pl and guessing_cd.py
+This repository contains the scripts developped for the following scientific publication: "A Global Mitogenomic Atlas Illuminates Freshwater Microeukaryote Diversity". The following scripts are: lca10.pl and guessing_cd.py. Both scripts require no-installation time, ready-to-use
 
 # lca10.pl
 To infer taxonomy, a lowest-common-ancestor (LCA) consensus approach was applied using lca10.pl . For each predicted protein within the MitoMAG, all taxonomy hits were collected and the most frequently occurring taxonomic tag at each rank was determined as follows. If a majority  (>50 %) of the protein’s hits agreed on a given taxonomic label at each rank, that label was assigned; otherwise the search moved one rank higher until a majority-rule consensus was reached. 

@@ -4,7 +4,7 @@ This repository contains the scripts developped for the following scientific pub
 # lca10.pl
 To infer taxonomy, a lowest-common-ancestor (LCA) consensus approach was applied using lca10.pl . For each predicted protein within the MitoMAG, all taxonomy hits were collected and the most frequently occurring taxonomic tag at each rank was determined as follows. If a majority  (>50 %) of the protein’s hits agreed on a given taxonomic label at each rank, that label was assigned; otherwise the search moved one rank higher until a majority-rule consensus was reached. 
 
-Requirements: Python 3 or higher
+Requirements: No specific requirements
 
 # guessing_cd.py
 Inferring mitochondrial genetic codes with Codetta

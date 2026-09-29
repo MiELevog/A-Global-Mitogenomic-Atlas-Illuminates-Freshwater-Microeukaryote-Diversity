@@ -1,5 +1,15 @@
 # A-Global-Mitogenomic-Atlas-Illuminates-Freshwater-Microeukaryote-Diversity
-This repository contains the scripts developped for the following scientific publication: "A Global Mitogenomic Atlas Illuminates Freshwater Microeukaryote Diversity". The following scripts are: lca10.pl and guessing_cd.py. Both scripts require no-installation time, ready-to-use
+This repository contains the scripts and trained tiara models developped for the following scientific publication: "A Global Mitogenomic Atlas Illuminates Freshwater Microeukaryote Diversity". The following scripts are: lca10.pl and guessing_cd.py. Both scripts require no-installation time, ready-to-use
+
+# Tiara_models
+This directory contains the updated Tiara models for mitochondrial genome identification.
+
+- nnet-models/ (trained neural network models)
+- tfidf-models/ (trained TF-IDF models)
+  
+To use these models, replace the corresponding nnet-models and tfidf-models directories in your Tiara installation with the ones provided here.
+
+IMPORTANT : Before replacing the original models, make a backup so they can be restored if needed. Keep the directory names unchanged (nnet-models and tfidf-models), as Tiara expects these names when loading the models.
 
 # lca10.pl
 To infer taxonomy, a lowest-common-ancestor (LCA) consensus approach was applied using lca10.pl . For each predicted protein within the MitoMAG, all taxonomy hits were collected and the most frequently occurring taxonomic tag at each rank was determined as follows. If a majority  (>50 %) of the protein’s hits agreed on a given taxonomic label at each rank, that label was assigned; otherwise the search moved one rank higher until a majority-rule consensus was reached. 
